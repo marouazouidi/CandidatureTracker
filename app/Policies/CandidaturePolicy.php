@@ -37,6 +37,11 @@ class CandidaturePolicy
         return $user->is($candidature->user);
     }
 
+    public function viewArchived(User $user): bool
+    {
+        return true;
+    }
+
     public function forceDelete(User $user, Candidature $candidature): bool
     {
         return $user->is($candidature->user);
