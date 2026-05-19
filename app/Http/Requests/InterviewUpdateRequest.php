@@ -24,7 +24,7 @@ class InterviewUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'=>'required|string|max:255',
+            'type'=>'required|in:Telephone,Technique,RH,Final',
             'interview_date'=>'required|date',
             'interview_time'=>'required|date_format:H:i',
             'preparation_notes'=>'nullable|string',
