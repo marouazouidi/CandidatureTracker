@@ -29,8 +29,8 @@ Route::middleware('auth')->group(function () {
             Route::get('/{candidature}/edit', 'edit')->name('candidatures.edit');
             Route::put('/{candidature}', 'update')->name('candidatures.update');
             Route::delete('/{candidature}', 'archive')->name('candidatures.archive');
-            Route::patch('/{candidature}/restore', 'restore')->name('candidatures.restore');
-            Route::delete('/{candidature}/force', 'forceDelete')->name('candidatures.forceDelete');
+            Route::patch('/{candidature}/restore', 'restore')->name('candidatures.restore')->withTrashed();
+            Route::delete('/{candidature}/force', 'forceDelete')->name('candidatures.forceDelete')->withTrashed();
         });
 
         Route::controller(InterviewController::class)->group(function(){
