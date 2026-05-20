@@ -96,17 +96,17 @@ class CandidatureController extends Controller
     {
         $this->authorize('restore', $candidature);
 
-        $candidature->onlyTrashed()->restore();
+        $candidature->restore();
 
-        return redirect()->route('candidatures.index');
+        return redirect()->route('candidatures.archives');
     }
 
     public function forceDelete(Candidature $candidature)
     {
         $this->authorize('forceDelete', $candidature);
 
-        $candidature->onlyTrashed()->forceDelete();
+        $candidature->forceDelete();
 
-        return redirect()->route('candidatures.index');
+        return redirect()->route('candidatures.archives');
     }
 }

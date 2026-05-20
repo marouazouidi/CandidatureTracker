@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Interview extends Model
 {
     use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'interview_date' => 'date',
+        ];
+    }
+
     protected $fillable = [
         'type',
         'interview_date',

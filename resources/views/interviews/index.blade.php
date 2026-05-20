@@ -1,63 +1,40 @@
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Entretiens') }} — {{ $candidature->company_name }}
-            </h2>
-            <a href="{{ route('interviews.create', $candidature) }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
-                {{ __('Ajouter un entretien') }}
-            </a>
-        </div>
+    <x-slot name="header">{{ __('Entretiens') }} — {{ $candidature->company_name }}</x-slot>
+    <x-slot name="actions">
+        <a href="{{ route('interviews.create', $candidature) }}" class="btn-primary text-xs">{{ __('Ajouter un entretien') }}</a>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    @if($interviews->isEmpty())
-                        <p class="text-gray-500 dark:text-gray-400">{{ __('Aucun entretien planifié.') }}</p>
-                    @else
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Type') }}</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Date') }}</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Résultat') }}</th>
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{{ __('Actions') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    @foreach($interviews as $interview)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{{ $interview->type }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ $interview->interview_date->format('d/m/Y') }} à {{ $interview->interview_time ? \Carbon\Carbon::parse($interview->interview_time)->format('H:i') : '' }}</td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                @if($interview->result === 'positive')
-                                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">{{ __('Positif') }}</span>
-                                                @elseif($interview->result === 'negative')
-                                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">{{ __('Négatif') }}</span>
-                                                @else
-                                                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">{{ __('En attente') }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="{{ route('interviews.show', [$candidature, $interview]) }}" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">{{ __('Voir') }}</a>
-                                                <a href="{{ route('interviews.edit', [$candidature, $interview]) }}" class="ml-2 text-yellow-600 dark:text-yellow-400 hover:text-yellow-900 dark:hover:text-yellow-300">{{ __('Modifier') }}</a>
-                                                <form action="{{ route('interviews.destroy', [$candidature, $interview]) }}" method="POST" class="inline ml-2">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300" onclick="return confirm('{{ __('Supprimer cet entretien ?') }}')">{{ __('Supprimer') }}</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
+    <div class="card">
+        <div class="card-body">
+            @forelse($interviews as $interview)
+                <div class="flex items-center justify-between py-3 {{ !$loop->first ? 'border-t border-dark-100' : '' }}">
+                    <div>
+                        <p class="text-sm font-medium text-dark-600">{{ $interview->type }}</p>
+                        <p class="text-xs text-dark-400 mt-0.5">{{ $interview->interview_date->format('d/m/Y') }}{{ $interview->interview_time ? ' à ' . \Carbon\Carbon::parse($interview->interview_time)->format('H:i') : '' }}</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        @if($interview->result === 'positive')
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-green-100 text-green-800">{{ __('Positif') }}</span>
+                        @elseif($interview->result === 'negative')
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-red-100 text-red-800">{{ __('Négatif') }}</span>
+                        @else
+                            <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ __('En attente') }}</span>
+                        @endif
+                        <a href="{{ route('interviews.show', [$candidature, $interview]) }}" class="text-xs text-rose-600 hover:text-rose-700 font-medium">{{ __('Voir') }}</a>
+                        <a href="{{ route('interviews.edit', [$candidature, $interview]) }}" class="text-xs text-dark-400 hover:text-dark-600">{{ __('Modifier') }}</a>
+                        <form action="{{ route('interviews.destroy', [$candidature, $interview]) }}" method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-xs text-red-500 hover:text-red-700" onclick="return confirm('{{ __('Supprimer cet entretien ?') }}')">{{ __('Supprimer') }}</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            @empty
+                <p class="text-sm text-dark-400">{{ __('Aucun entretien planifié.') }}</p>
+                <div class="mt-4">
+                    <a href="{{ route('interviews.create', $candidature) }}" class="btn-primary text-xs">{{ __('Ajouter un entretien') }}</a>
+                </div>
+            @endforelse
         </div>
     </div>
 </x-app-layout>

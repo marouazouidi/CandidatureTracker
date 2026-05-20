@@ -9,6 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Candidature extends Model
 {
     use SoftDeletes, HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+        ];
+    }
+
     protected $fillable = [
         'company_name',
         'poste_title',
