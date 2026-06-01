@@ -27,9 +27,24 @@ class AppServiceProvider extends ServiceProvider
                 $q->where('user_id', $user?->id);
             })->where('interview_date', '>=', Carbon::today())->count();
 
+            $upcomingInterviewsList = Interview::with('candidature')
+                ->whereHas('candidature', function ($q) use ($user) {
+                    $q->where('user_id', $user?->id);
+                })
+                ->where('interview_date', '>=', Carbon::today())
+                ->orderBy('interview_date')
+                ->orderBy('interview_time')
+                ->take(5)
+                ->get();
+
             $offersReceived = $user?->candidatures()
                 ->whereNull('deleted_at')
                 ->where('status', 'offer_received')
+                ->count() ?? 0;
+
+            $rejectedCount = $user?->candidatures()
+                ->whereNull('deleted_at')
+                ->where('status', 'rejected')
                 ->count() ?? 0;
 
             $recentCandidatures = $user?->candidatures()
@@ -38,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
                 ->take(5)
                 ->get() ?? collect();
 
-            $view->with(compact('activeCount', 'upcomingInterviews', 'offersReceived', 'recentCandidatures'));
+            $view->with(compact('activeCount', 'upcomingInterviews', 'upcomingInterviewsList', 'offersReceived', 'rejectedCount', 'recentCandidatures'));
         });
     }
 }

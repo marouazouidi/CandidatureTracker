@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <div class="text-center mb-6">
+        <h2 class="text-xl font-bold text-text-primary">{{ __('Create an account') }}</h2>
+        <p class="text-sm text-text-secondary mt-1">{{ __('Start tracking your applications') }}</p>
+    </div>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
@@ -32,9 +37,9 @@
             </x-primary-button>
         </div>
 
-        <p class="mt-6 text-center text-sm text-dark-400">
+        <p class="mt-6 text-center text-sm text-text-secondary">
             {{ __('Already have an account?') }}
-            <a href="{{ route('login') }}" class="text-rose-600 hover:text-rose-700 font-medium">{{ __('Log in') }}</a>
+            <a href="{{ route('login') }}" class="text-primary hover:text-primary-hover font-medium">{{ __('Log in') }}</a>
         </p>
     </form>
 </x-guest-layout>
