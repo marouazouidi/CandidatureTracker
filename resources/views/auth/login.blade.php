@@ -1,4 +1,9 @@
 <x-guest-layout>
+    <div class="text-center mb-6">
+        <h2 class="text-xl font-bold text-text-primary">{{ __('Welcome back') }}</h2>
+        <p class="text-sm text-text-secondary mt-1">{{ __('Sign in to your account') }}</p>
+    </div>
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
@@ -18,12 +23,12 @@
 
         <div class="flex items-center justify-between mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-dark-200 text-rose-600 shadow-sm focus:ring-rose-500" name="remember">
-                <span class="ms-2 text-sm text-dark-400">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox" class="rounded border-border text-primary shadow-sm focus:ring-primary" name="remember">
+                <span class="ms-2 text-sm text-text-secondary">{{ __('Remember me') }}</span>
             </label>
 
             @if (Route::has('password.request'))
-                <a class="text-sm text-rose-600 hover:text-rose-700 font-medium" href="{{ route('password.request') }}">
+                <a class="text-sm text-primary hover:text-primary-hover font-medium" href="{{ route('password.request') }}">
                     {{ __('Forgot password?') }}
                 </a>
             @endif
@@ -35,9 +40,9 @@
             </x-primary-button>
         </div>
 
-        <p class="mt-6 text-center text-sm text-dark-400">
+        <p class="mt-6 text-center text-sm text-text-secondary">
             {{ __('No account?') }}
-            <a href="{{ route('register') }}" class="text-rose-600 hover:text-rose-700 font-medium">{{ __('Register') }}</a>
+            <a href="{{ route('register') }}" class="text-primary hover:text-primary-hover font-medium">{{ __('Register') }}</a>
         </p>
     </form>
 </x-guest-layout>

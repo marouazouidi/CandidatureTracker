@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/create', 'create')->name('candidatures.create');
             Route::post('/', 'store')->name('candidatures.store');
             Route::get('/archives', 'archives')->name('candidatures.archives');
-            Route::get('/{candidature}', 'show')->name('candidatures.show');
+            Route::get('/{candidature}', 'show')->name('candidatures.show')->withTrashed();
             Route::get('/{candidature}/edit', 'edit')->name('candidatures.edit');
             Route::put('/{candidature}', 'update')->name('candidatures.update');
             Route::delete('/{candidature}', 'archive')->name('candidatures.archive');

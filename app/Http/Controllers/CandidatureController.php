@@ -19,6 +19,14 @@ class CandidatureController extends Controller
         $query = Candidature::where('user_id', Auth::id())
             ->whereNull('deleted_at');
 
+        if ($request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('company_name', 'like', "%{$search}%")
+                  ->orWhere('poste_title', 'like', "%{$search}%");
+            });
+        }
+
         if ($request->status) {
             $query->where('status', $request->status);
         }
@@ -27,7 +35,14 @@ class CandidatureController extends Controller
             $query->where('priority', $request->priority);
         }
 
-        $candidatures = $query->latest()->get();
+        $sortField = $request->sort ?? 'created_at';
+        $sortDir = $request->direction ?? 'desc';
+        $allowed = ['company_name', 'date', 'created_at', 'status', 'priority'];
+        if (in_array($sortField, $allowed)) {
+            $query->orderBy($sortField, $sortDir === 'asc' ? 'asc' : 'desc');
+        }
+
+        $candidatures = $query->paginate(10)->withQueryString();
 
         return view('candidatures.index', compact('candidatures'));
     }
@@ -80,14 +95,26 @@ class CandidatureController extends Controller
         return redirect()->route('candidatures.index');
     }
 
-    public function archives()
+    public function archives(Request $request)
     {
         $this->authorize('viewArchived', Candidature::class);
 
-        $candidatures = Candidature::onlyTrashed()
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
+        $query = Candidature::onlyTrashed()
+            ->where('user_id', Auth::id());
+
+        if ($request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('company_name', 'like', "%{$search}%")
+                  ->orWhere('poste_title', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $candidatures = $query->latest('deleted_at')->paginate(10)->withQueryString();
 
         return view('candidatures.archives', compact('candidatures'));
     }

@@ -4,7 +4,7 @@
         <a href="{{ route('candidatures.index') }}" class="btn-secondary text-xs">{{ __('Retour') }}</a>
     </x-slot>
 
-    <div class="max-w-2xl">
+    <div class="max-w-2xl mx-auto">
         <div class="card">
             <div class="card-body">
                 <form method="POST" action="{{ route('candidatures.store') }}" class="space-y-5">
@@ -64,7 +64,7 @@
 
                     <div class="flex items-center gap-4">
                         <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
-                        <a href="{{ route('candidatures.index') }}" class="text-sm text-dark-400 hover:text-dark-600">{{ __('Annuler') }}</a>
+                        <a href="{{ route('candidatures.index') }}" class="text-sm text-text-secondary hover:text-text-primary">{{ __('Annuler') }}</a>
                     </div>
                 </form>
             </div>
